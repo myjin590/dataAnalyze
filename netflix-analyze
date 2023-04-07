@@ -1,0 +1,25 @@
+import pandas as pd
+
+df = pd.read_csv('./data.csv')
+
+df.shape
+
+# dropping unnecessary columns
+df = df.drop(['Profile Name', 'Attributes', 'Supplemental Video Type', 'Device Type', 'Bookmark', 'Latest Bookmark', 'Country'], axis=1)
+
+# converting strings to datetime and timedelta in pandas
+# converting Start Time to DateTime & UTC to our local timezone
+df['Start Time'] = pd.to_datetime(df['Start Time'], utc=True)
+
+# change the Start Time column into the dataframe's index
+df = df.set_index('Start Time')
+# convert from UTC timezone to eastern time
+df.index = df.index.tz_convert('US/Eastern')
+# reset the index so that Start Time becomes a column again
+df = df.reset_index()
+
+#Convert Duration to timedelta
+df['Duration'] = pd.to_timedelta(df['Duration'])
+
+print(df.head(1))
+
